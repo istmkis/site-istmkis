@@ -1,0 +1,17 @@
+{
+    "name": "istmkis/istmkis",
+    "description": "site web officiel de l'institution refait avec PHP pour facilite la mis a jour",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Istmkis\\Istmkis\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "velis913",
+            "email": "marckab913@gmail.com"
+        }
+    ],
+    "require": {}
+}

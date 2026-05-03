@@ -1,0 +1,124 @@
+<!-- Dépendances habituelles -->
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<div id="archive-root"></div>
+
+<script type="text/babel">
+    const { useState } = React;
+
+    function ArchiveApp() {
+        const [filter, setFilter] = useState('Tous');
+
+        // Exemple de données (à lier à votre API plus tard)
+        const documents = [
+            { id: 1, titre: "Règlement intérieur 2025-2026", cat: "Officiel", date: "12 Mars 2026", url: "#" },
+            { id: 2, titre: "Décision DG n°042 - Frais de session", cat: "Décision", date: "28 Avril 2026", url: "#" },
+            { id: 3, titre: "Calendrier Académique Révisé", cat: "Académique", date: "02 Mai 2026", url: "#" },
+            { id: 4, titre: "Communiqué : Port des insignes", cat: "Communiqué", date: "15 Janv 2026", url: "#" },
+        ];
+
+        const categories = ['Tous', 'Décision', 'Officiel', 'Académique', 'Communiqué'];
+
+        const filteredDocs = filter === 'Tous'
+            ? documents
+            : documents.filter(doc => doc.cat === filter);
+
+        return (
+            <div className="container mx-auto py-12 px-4 max-w-5xl animate-fade-in">
+                <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+                    <div>
+                        <h2 className="text-3xl font-black text-slate-800 uppercase tracking-tight">Portail Documentaire</h2>
+                        <p className="text-slate-500 mt-2">Archives et décisions de la Direction Générale de l'ISTM-KIS</p>
+                    </div>
+
+                    {/* Filtres Soft */}
+                    <div className="flex flex-wrap gap-2">
+                        {categories.map(c => (
+                            <button
+                                key={c}
+                                onClick={() => setFilter(c)}
+                                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                                    filter === c
+                                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-200'
+                                        : 'bg-white text-slate-500 border border-slate-100 hover:bg-slate-50'
+                                }`}
+                            >
+                                {c}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse">
+                            <thead>
+                            <tr className="bg-slate-50/50 border-b border-slate-100">
+                                <th className="p-6 text-[10px] font-black uppercase text-slate-400 tracking-widest">Document</th>
+                                <th className="p-6 text-[10px] font-black uppercase text-slate-400 tracking-widest text-center">Catégorie</th>
+                                <th className="p-6 text-[10px] font-black uppercase text-slate-400 tracking-widest text-center">Date</th>
+                                <th className="p-6 text-[10px] font-black uppercase text-slate-400 tracking-widest text-right">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-50">
+                            {filteredDocs.map(doc => (
+                                <tr key={doc.id} className="hover:bg-blue-50/30 transition-colors group">
+                                    <td className="p-6">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center group-hover:bg-blue-100 group-hover:text-blue-600 transition-colors">
+                                                <i className="far fa-file-pdf text-lg"></i>
+                                            </div>
+                                            <span className="font-bold text-slate-700 group-hover:text-blue-700 transition-colors cursor-pointer">
+                                                    {doc.titre}
+                                                </span>
+                                        </div>
+                                    </td>
+                                    <td className="p-6 text-center">
+                                            <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter ${
+                                                doc.cat === 'Décision' ? 'bg-amber-50 text-amber-600' :
+                                                    doc.cat === 'Officiel' ? 'bg-green-50 text-green-600' :
+                                                        'bg-blue-50 text-blue-600'
+                                            }`}>
+                                                {doc.cat}
+                                            </span>
+                                    </td>
+                                    <td className="p-6 text-center text-slate-400 text-sm font-medium">
+                                        {doc.date}
+                                    </td>
+                                    <td className="p-6 text-right">
+                                        <a
+                                            href={doc.url}
+                                            className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white border border-slate-100 text-slate-600 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all shadow-sm"
+                                            title="Télécharger"
+                                        >
+                                            <i className="fas fa-download text-sm"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                {/* Note informative */}
+                <div className="mt-8 flex items-center gap-3 bg-blue-50 p-4 rounded-2xl border border-blue-100 max-w-fit">
+                    <i className="fas fa-info-circle text-blue-500"></i>
+                    <p className="text-xs text-blue-800 font-medium">
+                        Seuls les documents publics sont affichés ici. Pour les documents confidentiels, veuillez vous connecter.
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('archive-root'));
+    root.render(<ArchiveApp />);
+</script>
+
+<style>
+    .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+</style>
